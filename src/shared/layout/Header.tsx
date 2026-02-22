@@ -1,11 +1,13 @@
 import { Link } from "react-router-dom";
 import { useLanguageValue, useSetLanguage } from "@/shared/hooks/useLanguage";
 import { useScrollPosition } from "@/shared/hooks/useScrollPosition";
+import { useTranslations } from "@/shared/hooks/useTranslations"; // Add useTranslations import
 
 export const Header = () => {
   const lang = useLanguageValue();
   const setLang = useSetLanguage();
   const scrollPosition = useScrollPosition();
+  const t = useTranslations(); // Initialize useTranslations hook
   return (
     <>
       <header
@@ -15,7 +17,7 @@ export const Header = () => {
       >
         <div className={`pb-4 pt-5  flex items-center justify-between`}>
           <Link to={"/"} className="font-Tenada text-[#5A7C88]">
-            {lang === "en" ? "My Pokemon Encyclopedia" : "나만의 포켓몬 도감"}
+            {t('myPokemonEncyclopedia')}
           </Link>
           <div className="text-xs sm:text-sm items-center hidden sm:flex">
             {/* 웹 */}
@@ -26,7 +28,7 @@ export const Header = () => {
                 lang === "en" ? "text-[#5A7C88]" : "text-gray-100"
               } p-1 sm:p-2`}
             >
-              English
+              {t('english')}
             </button>
             <button
               onClick={() => setLang("ko")}
@@ -34,7 +36,7 @@ export const Header = () => {
                 lang === "ko" ? "text-[#5A7C88]" : "text-gray-100"
               } p-1 sm:p-2`}
             >
-              한국어
+              {t('korean')}
             </button>
           </div>
 
@@ -50,8 +52,8 @@ export const Header = () => {
                   setLang("ko");
               }}
             >
-              {lang === "en" && "English"}
-              {lang === "ko" && "한국어"}
+              {t('english')}
+              {t('korean')}
             </button>
           </div>
         </div>

@@ -4,15 +4,15 @@ import { PokemonCard } from "@/features/pokemon/components/PokemonCard";
 import PokemonSearch from "@/features/pokemon/components/PokemonSearch";
 import PokemonTypeNav from "@/features/pokemon/components/PokemonTypeNav";
 import { PokemonCardList, PokemonGrid } from "@/features/pokemon/components/PokemonGrid";
-import { useLanguageValue } from "@/shared/hooks/useLanguage";
 import { Button } from "@/shared/ui/Button";
 import { usePokemonList } from "@/features/pokemon/hooks";
+import { useTranslations } from "@/shared/hooks/useTranslations"; // Add useTranslations import
 
 const MainPage = () => {
   const [ref, isView] = useInView();
-  const lang = useLanguageValue();
   const [input, setInput] = useState<string>("");
   const [search, setSearch] = useState<string>("");
+  const t = useTranslations();
 
   const {
     data: pokemonListAll,
@@ -34,12 +34,7 @@ const MainPage = () => {
         {/* 기본 홈 진입시 pokemonListAll*/}
         {!search && (
           <>
-            {pokemonListAllStatus === "pending" && (
-              <p>
-                {lang === "en" && "Loading ... "}
-                {lang === "ko" && "불러오는 중 ..."}
-              </p>
-            )}
+            {pokemonListAllStatus === "pending" && <p>{t("loading")}</p>}
             {/* {status === "error" && <p>{error?.message}</p>} */}
             {pokemonListAllStatus === "success" && (
               <PokemonGrid sentinelRef={ref}>
@@ -54,22 +49,11 @@ const MainPage = () => {
         {/* 검색 결과 */}
         {!!search && (
           <>
-            {pokemonListAllStatus === "pending" && (
-              <p>
-                {lang === "en" && "Searching ... "}
-                {lang === "ko" && "검색 중 ..."}
-              </p>
-            )}
+            {pokemonListAllStatus === "pending" && <p>{t("searching")}</p>}
             {pokemonListAllStatus === "error" && (
               <div className="flex flex-col items-center">
-                <p className="mb-14">
-                  {lang === "en" && "No Results! Search Again"}
-                  {lang === "ko" && "검색 결과가 없습니다! 다시 검색해주세요"}
-                </p>
-                <Button onClick={() => setSearch("")}>
-                  {lang === "en" && "Search All "}
-                  {lang === "ko" && "전체 검색"}
-                </Button>
+                <p className="mb-14">{t("noResults")}</p>
+                <Button onClick={() => setSearch("")}>{t("searchAll")}</Button>
               </div>
             )}
             {pokemonListAllStatus === "success" && (

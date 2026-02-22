@@ -6,6 +6,7 @@ import {
   fetchPokemonSpecies,
   fetchByUrl,
 } from "@/features/pokemon/api";
+import { EvolutionChain } from "@/types"; // Import the new type
 
 export const usePokemon = (nameOrId?: string) =>
   useQuery({
@@ -45,4 +46,11 @@ export const usePokemonList = (search: string) =>
       if (!next) return undefined;
       return Number(new URL(next).searchParams.get("offset"));
     },
+  });
+
+export const useEvolutionChain = (evolutionChainUrl?: string) =>
+  useQuery<EvolutionChain>({
+    queryKey: ["evolution-chain", evolutionChainUrl],
+    queryFn: () => fetchByUrl(evolutionChainUrl as string),
+    enabled: !!evolutionChainUrl,
   });

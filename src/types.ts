@@ -162,3 +162,38 @@ export interface PokemonSpecies {
   genera: PokemonGenera[];
   varieties: [];
 }
+
+// Evolution Chain Types
+export interface EvolutionDetail {
+  item: PokemonBasic | null;
+  trigger: PokemonBasic;
+  gender: number | null;
+  held_item: PokemonBasic | null;
+  known_move: PokemonBasic | null;
+  known_move_type: PokemonBasic | null;
+  location: PokemonBasic | null;
+  min_level: number | null;
+  min_happiness: number | null;
+  min_beauty: number | null;
+  min_affection: number | null;
+  needs_overworld_rain: boolean;
+  party_species: PokemonBasic | null;
+  party_type: PokemonBasic | null;
+  relative_physical_stats: number | null;
+  time_of_day: string;
+  trade_species: PokemonBasic | null;
+  turn_upside_down: boolean;
+}
+
+export interface EvolutionChainLink {
+  is_baby: boolean;
+  species: PokemonBasic;
+  evolution_details: EvolutionDetail[];
+  evolves_to: EvolutionChainLink[]; // Recursive
+}
+
+export interface EvolutionChain {
+  id: number;
+  baby_trigger_item: PokemonBasic | null;
+  chain: EvolutionChainLink;
+}
