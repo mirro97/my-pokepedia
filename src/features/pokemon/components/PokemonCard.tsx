@@ -1,10 +1,9 @@
-import { getPokemonInfo, getPokemonListWithSpecies } from "@/core/apis/pokemon";
 import { PokemonBasic, PokemonType } from "@/types";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
-import TypeLabel from "@/components/common/typeLabel";
-import { convertLanguage } from "@/core/utils/convertLanguage";
+import PokemonTypeLabel from "@/features/pokemon/components/PokemonTypeLabel";
+import { useLocalizedList } from "@/shared/hooks/useLocalizedList";
+import { usePokemon, usePokemonSpecies } from "@/features/pokemon/hooks";
 
 interface pokemonProps {
   pokemonIndex: string;
@@ -16,24 +15,20 @@ interface nameTextType {
 }
 
 export const PokemonCard = ({ pokemonIndex }: pokemonProps) => {
-  const { data: pokemonInfo } = useQuery({
-    queryKey: ["pokemons", pokemonIndex],
-    queryFn: () => getPokemonInfo(`https://pokeapi.co/api/v2/pokemon/${pokemonIndex}`),
-    enabled: !!pokemonIndex,
-  });
-
-  const { data: pokemonSpeciesInfo } = useQuery({
-    queryKey: ["pokemon-species", pokemonInfo?.species?.name],
-    queryFn: () => getPokemonListWithSpecies(pokemonInfo?.species?.name),
-    enabled: !!pokemonInfo?.species?.name,
-  });
+  const { data: pokemonInfo } = usePokemon(pokemonIndex);
+  const { data: pokemonSpeciesInfo } = usePokemonSpecies(
+    pokemonInfo?.species?.name
+  );
+  const pokemonId = pokemonInfo?.id ?? pokemonIndex;
 
   // 포켓몬 설명 언어 변환
-  let nameText: nameTextType[] = convertLanguage(pokemonSpeciesInfo?.names);
+  const nameText: nameTextType[] = useLocalizedList(
+    pokemonSpeciesInfo?.names
+  );
 
   return (
     <Link
-      to={`/pokemon/${pokemonInfo?.id}`}
+      to={`/pokemon/${pokemonId}`}
       className="flex flex-col p-5 w-full bg-[#fff] rounded-2xl shadow-md"
     >
       <div className="flex items-center text-base">
@@ -43,7 +38,7 @@ export const PokemonCard = ({ pokemonIndex }: pokemonProps) => {
         />
         <span className="font-galmuri">{nameText && nameText[0]?.name}</span>
       </div>
-      <span className="font-galmuri"># {pokemonInfo?.id}</span>
+      <span className="font-galmuri"># {pokemonInfo?.id ?? pokemonIndex}</span>
 
       <div className="p-5 h-[160px] flex items-center justify-center">
         <LazyLoadImage
@@ -66,7 +61,7 @@ export const PokemonCard = ({ pokemonIndex }: pokemonProps) => {
 
       <div className="flex group is-card">
         {pokemonInfo?.types?.map((type: PokemonType, index: number) => {
-          return <TypeLabel key={index} typeData={type} />;
+          return <PokemonTypeLabel key={index} typeData={type} />;
         })}
       </div>
     </Link>

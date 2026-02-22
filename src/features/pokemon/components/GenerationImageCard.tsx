@@ -1,15 +1,16 @@
-import { language } from "@/core/recoil/language";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import { useRecoilState } from "recoil";
+import { useLanguageValue } from "@/shared/hooks/useLanguage";
 
 interface Props {
   enTitle: string;
   koTitle: string;
-  src: string;
+  src?: string;
 }
 
 const GenerationImageCard = ({ enTitle, koTitle, src }: Props) => {
-  const [lang, setLang] = useRecoilState(language);
+  const { lang } = useLanguageValue();
+
+  if (!src) return null;
 
   return (
     <div className="shadow-sm hover:shadow-md hover:animate-pulse mr-[10px] w-32 mb-3 rounded-md p-[10px]">
@@ -17,8 +18,7 @@ const GenerationImageCard = ({ enTitle, koTitle, src }: Props) => {
         <LazyLoadImage src={src} alt={enTitle} />
       </div>
       <span className="text-xs text-center font-galmuri">
-        {lang.lang === "en" && enTitle}
-        {lang.lang === "ko" && koTitle}
+        {lang === "en" ? enTitle : koTitle}
       </span>
     </div>
   );

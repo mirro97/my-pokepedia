@@ -1,5 +1,3 @@
-import { language } from "@/core/recoil/language";
-import { convertLanguage } from "@/core/utils/convertLanguage";
 import {
   PokemonBasic,
   PokemonDetailType,
@@ -7,11 +5,13 @@ import {
   PokemonType,
 } from "@/types";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import { useRecoilState } from "recoil";
-import Label from "@/components/common/label";
-import ImageWrapByGeneration from "./generation";
-import TypeLabel from "../common/typeLabel";
-import ImageShadowWrap from "@/components/common/imageShadowWrap";
+import Label from "@/shared/ui/Label";
+import PokemonGenerationGallery from "@/features/pokemon/components/PokemonGenerationGallery";
+import PokemonTypeLabel from "@/features/pokemon/components/PokemonTypeLabel";
+import ImageShadowWrap from "@/shared/ui/ImageShadowWrap";
+import { useLanguageValue } from "@/shared/hooks/useLanguage";
+import { useLocalizedList } from "@/shared/hooks/useLocalizedList";
+import { POKEMON_IMAGE_KEYS } from "@/shared/constants/pokemon";
 
 interface propsType {
   pokemonInfo: PokemonDetailType;
@@ -29,27 +29,16 @@ interface nameTextType {
   name: string;
 }
 
-const pokemonImg: string[] = [
-  "front_default",
-  "front_female",
-  "back_default",
-  "back_female",
-  "front_shiny",
-  "front_shiny_female",
-  "back_shiny",
-  "back_shiny_female",
-];
-
 const PokemonDetailBox = ({ pokemonInfo, pokemonSpeciesInfo }: propsType) => {
-  const [lang, setLang] = useRecoilState(language);
+  const { lang, langNum_genera } = useLanguageValue();
 
   // 포켓몬 설명 언어 변환
-  let flavorText: flavorTextType[] = convertLanguage(
+  const flavorText: flavorTextType[] = useLocalizedList(
     pokemonSpeciesInfo?.flavor_text_entries
   );
 
   // 포켓몬 이름 언어 변환
-  let nameText: nameTextType[] = convertLanguage(pokemonSpeciesInfo?.names);
+  const nameText: nameTextType[] = useLocalizedList(pokemonSpeciesInfo?.names);
 
   return (
     <div className="flex flex-col p-10 items-center bg-[#fff] rounded-2xl shadow-xl">
@@ -71,11 +60,11 @@ const PokemonDetailBox = ({ pokemonInfo, pokemonSpeciesInfo }: propsType) => {
       </span>
       <div className="flex w-full justify-center group is-tab mt-3">
         {pokemonInfo?.types.map((type: PokemonType, index: number) => {
-          return <TypeLabel key={index} typeData={type} />;
+          return <PokemonTypeLabel key={index} typeData={type} />;
         })}
       </div>
       <div className="mt-3 text-lg font-bold text-gray-100">
-        {pokemonSpeciesInfo?.genera[lang.langNum_genera]?.genus}
+        {pokemonSpeciesInfo?.genera[langNum_genera]?.genus}
       </div>
       <div className="mt-3 text-center">
         <span>{flavorText && flavorText[0]?.flavor_text}</span>
@@ -94,7 +83,7 @@ const PokemonDetailBox = ({ pokemonInfo, pokemonSpeciesInfo }: propsType) => {
       </div>
 
       <div className="mt-10 max-w-3xl w-full flex flex-wrap justify-around">
-        {pokemonImg.map(
+        {POKEMON_IMAGE_KEYS.map(
           (imgtype, imgIndex) =>
             pokemonInfo?.sprites[imgtype] && (
               <ImageShadowWrap key={imgIndex}>
@@ -114,12 +103,12 @@ const PokemonDetailBox = ({ pokemonInfo, pokemonSpeciesInfo }: propsType) => {
       <div className="mt-10">
         <Label
           context={
-            lang.lang === "en"
+            lang === "en"
               ? "Pokemon Appearance Transformation by Series"
               : "시리즈별 포켓몬 모습 변천사"
           }
         />
-        <ImageWrapByGeneration {...pokemonInfo?.sprites?.versions} />
+        <PokemonGenerationGallery {...pokemonInfo?.sprites?.versions} />
       </div>
     </div>
   );

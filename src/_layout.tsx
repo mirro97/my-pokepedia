@@ -1,7 +1,7 @@
 import React, { Suspense } from "react";
 import { Outlet } from "react-router-dom";
-import { Footer } from "./components/basic/footer";
-import { Header } from "./components/basic/header";
+import { Footer } from "@/shared/layout/Footer";
+import { Header } from "@/shared/layout/Header";
 
 const Layout: React.FC = () => {
   return (

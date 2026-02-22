@@ -1,18 +1,10 @@
-import { language } from "@/core/recoil/language";
-import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { useRecoilState } from "recoil";
+import { useLanguageState } from "@/shared/hooks/useLanguage";
+import { useScrollPosition } from "@/shared/hooks/useScrollPosition";
 
 export const Header = () => {
-  const [lang, setLang] = useRecoilState(language);
-  const [scrollPosition, setScrollPosition] = useState(0);
-  const updateScroll = () => {
-    setScrollPosition(window.scrollY || document.documentElement.scrollTop);
-  };
-
-  useEffect(() => {
-    window.addEventListener("scroll", updateScroll);
-  });
+  const [lang, setLang] = useLanguageState();
+  const scrollPosition = useScrollPosition();
   return (
     <>
       <header
@@ -22,8 +14,7 @@ export const Header = () => {
       >
         <div className={`pb-4 pt-5  flex items-center justify-between`}>
           <Link to={"/"} className="font-Tenada text-[#5A7C88]">
-            {lang.lang === "en" && "My Pokemon Encyclopedia"}
-            {lang.lang === "ko" && "나만의 포켓몬 도감"}
+            {lang.lang === "en" ? "My Pokemon Encyclopedia" : "나만의 포켓몬 도감"}
           </Link>
           <div className="text-xs sm:text-sm items-center hidden sm:flex">
             {/* 웹 */}
