@@ -1,5 +1,4 @@
 import { PokemonBasic } from "@/types";
-import { useQueries } from "react-query";
 import axios from "../../plugins/axios";
 
 // 포켓몬 detail data 가져오기 (url을 통해)

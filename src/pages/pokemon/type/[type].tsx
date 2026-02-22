@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import { PokemonBasic } from "@/types";
 import { PokemonCard } from "@/components/pokemon/card";
@@ -19,11 +19,11 @@ interface typeTextType {
 
 const PokemonType = () => {
   const { type } = useParams();
-  const { data: typedPokemonList } = useQuery(
-    ["typed-pokemonList", type],
-    () => getPokemonListWithType(type),
-    { enabled: !!type }
-  );
+  const { data: typedPokemonList } = useQuery({
+    queryKey: ["typed-pokemonList", type],
+    queryFn: () => getPokemonListWithType(type),
+    enabled: !!type,
+  });
 
   const [scrollPosition, setScrollPosition] = useState(0);
   const updateScroll = () => {

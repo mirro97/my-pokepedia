@@ -1,7 +1,7 @@
 import { getPokemonInfo, getPokemonListWithSpecies } from "@/core/apis/pokemon";
 import { PokemonBasic, PokemonType } from "@/types";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import TypeLabel from "@/components/common/typeLabel";
 import { convertLanguage } from "@/core/utils/convertLanguage";
@@ -16,17 +16,17 @@ interface nameTextType {
 }
 
 export const PokemonCard = ({ pokemonIndex }: pokemonProps) => {
-  const { data: pokemonInfo } = useQuery(
-    ["pokemons", pokemonIndex],
-    () => getPokemonInfo(`https://pokeapi.co/api/v2/pokemon/${pokemonIndex}`),
-    { enabled: !!pokemonIndex }
-  );
+  const { data: pokemonInfo } = useQuery({
+    queryKey: ["pokemons", pokemonIndex],
+    queryFn: () => getPokemonInfo(`https://pokeapi.co/api/v2/pokemon/${pokemonIndex}`),
+    enabled: !!pokemonIndex,
+  });
 
-  const { data: pokemonSpeciesInfo } = useQuery(
-    ["pokemon-species", pokemonInfo?.species?.name],
-    () => getPokemonListWithSpecies(pokemonInfo?.species?.name),
-    { enabled: !!pokemonInfo?.species?.name }
-  );
+  const { data: pokemonSpeciesInfo } = useQuery({
+    queryKey: ["pokemon-species", pokemonInfo?.species?.name],
+    queryFn: () => getPokemonListWithSpecies(pokemonInfo?.species?.name),
+    enabled: !!pokemonInfo?.species?.name,
+  });
 
   // 포켓몬 설명 언어 변환
   let nameText: nameTextType[] = convertLanguage(pokemonSpeciesInfo?.names);
