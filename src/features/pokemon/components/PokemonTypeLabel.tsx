@@ -13,7 +13,7 @@ interface PockemonTypePorps {
 }
 
 const PokemonTypeLabel = ({ typeData, onClick }: PockemonTypePorps) => {
-  const { lang } = useLanguageValue();
+  const lang = useLanguageValue();
   const navigate = useNavigate();
   const typeName = typeData?.type?.name;
   const label =

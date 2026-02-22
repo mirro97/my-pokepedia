@@ -4,14 +4,13 @@ import { PokemonCard } from "@/features/pokemon/components/PokemonCard";
 import PokemonSearch from "@/features/pokemon/components/PokemonSearch";
 import PokemonTypeNav from "@/features/pokemon/components/PokemonTypeNav";
 import { PokemonCardList, PokemonGrid } from "@/features/pokemon/components/PokemonGrid";
-import { useLanguageState } from "@/shared/hooks/useLanguage";
-import { GalmuriText } from "@/shared/ui/Text";
+import { useLanguageValue } from "@/shared/hooks/useLanguage";
 import { Button } from "@/shared/ui/Button";
 import { usePokemonList } from "@/features/pokemon/hooks";
 
 const MainPage = () => {
   const [ref, isView] = useInView();
-  const [lang] = useLanguageState();
+  const lang = useLanguageValue();
   const [input, setInput] = useState<string>("");
   const [search, setSearch] = useState<string>("");
 
@@ -36,10 +35,10 @@ const MainPage = () => {
         {!search && (
           <>
             {pokemonListAllStatus === "pending" && (
-              <GalmuriText>
-                {lang.lang === "en" && "Loading ... "}
-                {lang.lang === "ko" && "불러오는 중 ..."}
-              </GalmuriText>
+              <p>
+                {lang === "en" && "Loading ... "}
+                {lang === "ko" && "불러오는 중 ..."}
+              </p>
             )}
             {/* {status === "error" && <p>{error?.message}</p>} */}
             {pokemonListAllStatus === "success" && (
@@ -56,21 +55,20 @@ const MainPage = () => {
         {!!search && (
           <>
             {pokemonListAllStatus === "pending" && (
-              <GalmuriText>
-                {lang.lang === "en" && "Searching ... "}
-                {lang.lang === "ko" && "검색 중 ..."}
-              </GalmuriText>
+              <p>
+                {lang === "en" && "Searching ... "}
+                {lang === "ko" && "검색 중 ..."}
+              </p>
             )}
             {pokemonListAllStatus === "error" && (
               <div className="flex flex-col items-center">
-                <GalmuriText className="mb-14">
-                  {lang.lang === "en" && "No Results! Search Again"}
-                  {lang.lang === "ko" &&
-                    "검색 결과가 없습니다! 다시 검색해주세요"}
-                </GalmuriText>
+                <p className="mb-14">
+                  {lang === "en" && "No Results! Search Again"}
+                  {lang === "ko" && "검색 결과가 없습니다! 다시 검색해주세요"}
+                </p>
                 <Button onClick={() => setSearch("")}>
-                  {lang.lang === "en" && "Search All "}
-                  {lang.lang === "ko" && "전체 검색"}
+                  {lang === "en" && "Search All "}
+                  {lang === "ko" && "전체 검색"}
                 </Button>
               </div>
             )}

@@ -1,9 +1,10 @@
 import { Link } from "react-router-dom";
-import { useLanguageState } from "@/shared/hooks/useLanguage";
+import { useLanguageValue, useSetLanguage } from "@/shared/hooks/useLanguage";
 import { useScrollPosition } from "@/shared/hooks/useScrollPosition";
 
 export const Header = () => {
-  const [lang, setLang] = useLanguageState();
+  const lang = useLanguageValue();
+  const setLang = useSetLanguage();
   const scrollPosition = useScrollPosition();
   return (
     <>
@@ -14,33 +15,23 @@ export const Header = () => {
       >
         <div className={`pb-4 pt-5  flex items-center justify-between`}>
           <Link to={"/"} className="font-Tenada text-[#5A7C88]">
-            {lang.lang === "en" ? "My Pokemon Encyclopedia" : "나만의 포켓몬 도감"}
+            {lang === "en" ? "My Pokemon Encyclopedia" : "나만의 포켓몬 도감"}
           </Link>
           <div className="text-xs sm:text-sm items-center hidden sm:flex">
             {/* 웹 */}
             <img className="w-4 sm:w-5" src="/images/global.png" alt="다국어" />
             <button
-              onClick={() =>
-                setLang({
-                  lang: "en",
-                  langNum_genera: 7,
-                })
-              }
+              onClick={() => setLang("en")}
               className={`${
-                lang.lang === "en" ? "text-[#5A7C88]" : "text-gray-100"
+                lang === "en" ? "text-[#5A7C88]" : "text-gray-100"
               } p-1 sm:p-2`}
             >
               English
             </button>
             <button
-              onClick={() =>
-                setLang({
-                  lang: "ko",
-                  langNum_genera: 1,
-                })
-              }
+              onClick={() => setLang("ko")}
               className={`${
-                lang.lang === "ko" ? "text-[#5A7C88]" : "text-gray-100"
+                lang === "ko" ? "text-[#5A7C88]" : "text-gray-100"
               } p-1 sm:p-2`}
             >
               한국어
@@ -53,20 +44,14 @@ export const Header = () => {
             <button
               className={"p-1 text-[#5A7C88]"}
               onClick={() => {
-                if (lang.lang === "ko")
-                  setLang({
-                    lang: "en",
-                    langNum_genera: 7,
-                  });
+                if (lang === "ko")
+                  setLang("en");
                 else
-                  setLang({
-                    lang: "ko",
-                    langNum_genera: 1,
-                  });
+                  setLang("ko");
               }}
             >
-              {lang.lang === "en" && "English"}
-              {lang.lang === "ko" && "한국어"}
+              {lang === "en" && "English"}
+              {lang === "ko" && "한국어"}
             </button>
           </div>
         </div>

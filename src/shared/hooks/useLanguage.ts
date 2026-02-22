@@ -1,8 +1,6 @@
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { language } from "@/core/recoil/language";
+import { useLanguageStore } from "../stores/languageStore";
 
-export const useLanguageState = () => useRecoilState(language);
 
-export const useLanguageValue = () => useRecoilValue(language);
-
-export const useSetLanguage = () => useSetRecoilState(language);
+export const useLanguageValue = () => useLanguageStore((state) => state.currentLanguage);
+export const useSetLanguage = () => useLanguageStore((state) => state.setLanguage);
+export const useLangNumGenera = () => useLanguageStore((state) => state.langNumGenera);

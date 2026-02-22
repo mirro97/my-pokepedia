@@ -9,7 +9,7 @@ interface Props {
 }
 
 const PokemonSearch = ({ input, setInput, setSearch }: Props) => {
-  const { lang } = useLanguageValue();
+  const lang = useLanguageValue();
   const placeholder =
     lang === "en"
       ? "Search Pokemon With Name or Id!"

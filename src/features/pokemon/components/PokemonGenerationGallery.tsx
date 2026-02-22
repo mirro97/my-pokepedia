@@ -6,7 +6,7 @@ import { POKEMON_GENERATION_SECTIONS } from "@/shared/constants/pokemon";
 const PokemonGenerationGallery = (
   generationImage: PokemonVersionsGeneration | undefined
 ) => {
-  const { lang } = useLanguageValue();
+  const lang = useLanguageValue();
 
   return (
     <div className="mt-7">

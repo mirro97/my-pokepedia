@@ -8,7 +8,7 @@ interface Props {
 }
 
 const GenerationImageCard = ({ enTitle, koTitle, src }: Props) => {
-  const { lang } = useLanguageValue();
+  const lang = useLanguageValue();
 
   if (!src) return null;
 

@@ -8,7 +8,7 @@ interface LanguageEntry {
 }
 
 export const useLocalizedList = <T extends LanguageEntry>(items?: T[]) => {
-  const { lang } = useLanguageValue();
+  const lang = useLanguageValue();
 
   return useMemo(() => {
     if (!items?.length) return [] as T[];

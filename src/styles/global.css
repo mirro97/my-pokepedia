@@ -51,6 +51,10 @@ body {
   background-color: #f2f4f6;
 }
 
+p {
+  font-family: "Galmuri9", sans-serif;
+}
+
 div#root {
   height: 100%;
 }

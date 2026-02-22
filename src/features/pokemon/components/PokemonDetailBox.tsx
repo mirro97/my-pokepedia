@@ -9,7 +9,7 @@ import Label from "@/shared/ui/Label";
 import PokemonGenerationGallery from "@/features/pokemon/components/PokemonGenerationGallery";
 import PokemonTypeLabel from "@/features/pokemon/components/PokemonTypeLabel";
 import ImageShadowWrap from "@/shared/ui/ImageShadowWrap";
-import { useLanguageValue } from "@/shared/hooks/useLanguage";
+import { useLanguageValue, useLangNumGenera } from "@/shared/hooks/useLanguage";
 import { useLocalizedList } from "@/shared/hooks/useLocalizedList";
 import { POKEMON_IMAGE_KEYS } from "@/shared/constants/pokemon";
 
@@ -30,7 +30,8 @@ interface nameTextType {
 }
 
 const PokemonDetailBox = ({ pokemonInfo, pokemonSpeciesInfo }: propsType) => {
-  const { lang, langNum_genera } = useLanguageValue();
+  const lang = useLanguageValue();
+  const langNum_genera = useLangNumGenera();
 
   // 포켓몬 설명 언어 변환
   const flavorText: flavorTextType[] = useLocalizedList(
@@ -72,12 +73,12 @@ const PokemonDetailBox = ({ pokemonInfo, pokemonSpeciesInfo }: propsType) => {
       <div className="flex mt-10">
         <div className="flex flex-col items-center mr-5">
           <div className="max-w-[180px]"></div>
-          <Label context={lang.lang === "en" ? "HEIGHT" : "신장"} />
+          <Label context={lang === "en" ? "HEIGHT" : "신장"} />
           <span className="mt-3">{pokemonInfo?.height / 10} m</span>
         </div>
         <div className="flex flex-col items-center">
           <div className="max-w-[180px]"></div>
-          <Label context={lang.lang === "en" ? "WEIGHT" : "무게"} />
+          <Label context={lang === "en" ? "WEIGHT" : "무게"} />
           <span className="mt-3">{pokemonInfo?.weight / 10} kg</span>
         </div>
       </div>
