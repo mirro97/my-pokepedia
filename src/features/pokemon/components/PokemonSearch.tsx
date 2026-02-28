@@ -14,6 +14,10 @@ const PokemonSearch = ({ input, setInput, setSearch }: Props) => {
     lang === "en"
       ? "Search Pokemon With Name or Id!"
       : "포켓몬 이름 또는 아이디를 입력해주세요!";
+  const handleSearch = () => {
+    const normalized = input.trim().toLowerCase();
+    setSearch((prev) => (prev === normalized ? prev : normalized));
+  };
 
   return (
     <div className="mx-auto max-w-3xl py-4">
@@ -21,7 +25,7 @@ const PokemonSearch = ({ input, setInput, setSearch }: Props) => {
         value={input}
         placeholder={placeholder}
         onChange={setInput}
-        onSearch={() => setSearch(input)}
+        onSearch={handleSearch}
       />
     </div>
   );
