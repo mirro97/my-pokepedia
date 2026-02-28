@@ -9,6 +9,10 @@ import { usePokemonList } from "@/features/pokemon/hooks";
 import { useTranslations } from "@/shared/hooks/useTranslations"; // Add useTranslations import
 
 const MainPage = () => {
+  const getErrorStatus = (error: unknown) => {
+    if (!error || typeof error !== "object") return undefined;
+    return (error as { response?: { status?: number } }).response?.status;
+  };
   const [ref, isView] = useInView();
   const [input, setInput] = useState<string>("");
   const [search, setSearch] = useState<string>("");
@@ -19,7 +23,9 @@ const MainPage = () => {
     fetchNextPage: pokemonListAllFetchNextPage,
     hasNextPage: pokemonListAllHasNextPage,
     status: pokemonListAllStatus,
+    error: pokemonListAllError,
   } = usePokemonList(search);
+  const searchErrorStatus = getErrorStatus(pokemonListAllError);
 
   // 무한 스크롤
   useEffect(() => {
@@ -52,7 +58,9 @@ const MainPage = () => {
             {pokemonListAllStatus === "pending" && <p>{t("searching")}</p>}
             {pokemonListAllStatus === "error" && (
               <div className="flex flex-col items-center">
-                <p className="mb-14">{t("noResults")}</p>
+                <p className="mb-14">
+                  {searchErrorStatus === 404 ? t("noResults") : t("searchFailed")}
+                </p>
                 <Button onClick={() => setSearch("")}>{t("searchAll")}</Button>
               </div>
             )}
