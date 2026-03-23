@@ -1,4 +1,5 @@
 import { useInfiniteQuery, useQuery, useQueries } from "@tanstack/react-query";
+import { useMemo } from "react";
 import {
   fetchPokemon,
   fetchPokemonByType,
@@ -77,13 +78,15 @@ export const usePokemonSearchIndex = (): SearchIndexEntry[] => {
   const lang = useLanguageValue();
   const { data } = useAllPokemonNames();
 
-  if (!data?.results) return [];
+  return useMemo(() => {
+    if (!data?.results) return [];
 
-  return data.results.map((pokemon) => {
-    const id = Number(pokemon.url.split("/").filter(Boolean).pop());
-    const name = lang === "ko" ? (POKEMON_NAMES_KO[id] ?? pokemon.name) : pokemon.name;
-    return { id, name: name.toLowerCase() };
-  });
+    return data.results.map((pokemon) => {
+      const id = Number(pokemon.url.split("/").filter(Boolean).pop());
+      const name = lang === "ko" ? (POKEMON_NAMES_KO[id] ?? pokemon.name) : pokemon.name;
+      return { id, name: name.toLowerCase() };
+    });
+  }, [data, lang]);
 };
 
 export const usePokemonSearchResults = (matchedIds: number[]) => {
