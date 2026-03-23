@@ -55,20 +55,13 @@ p {
   font-family: "Galmuri9", sans-serif;
 }
 
-div#root {
-  height: 100%;
-}
-
 a,
 span {
   display: block;
-  /* font-family: "Pretendard", sans-serif; */
 }
 
 button {
   cursor: pointer;
-
-  /* 드래그 금지 */
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -khtml-user-select: none;

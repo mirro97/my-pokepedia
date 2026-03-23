@@ -64,7 +64,7 @@ async function main() {
 export const POKEMON_NAMES_KO: Record<number, string> = ${JSON.stringify(names, null, 2)};
 `;
 
-  const outPath = path.resolve(__dirname, "../src/shared/constants/pokemonNames.ts");
+  const outPath = path.resolve(__dirname, "../src/constants/pokemonNames.ts");
   fs.writeFileSync(outPath, output, "utf-8");
   console.log(`\nDone! Written to ${outPath}`);
 }

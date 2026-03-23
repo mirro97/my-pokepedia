@@ -1,0 +1,18 @@
+{
+  "loading": "Loading ...",
+  "searching": "Searching ...",
+  "noResults": "No Results! Search Again",
+  "searchFailed": "Something went wrong while searching. Please try again.",
+  "searchAll": "Search All",
+  "myPokemonEncyclopedia": "My Pokemon Encyclopedia",
+  "english": "English",
+  "korean": "Korean",
+  "height": "HEIGHT",
+  "weight": "WEIGHT",
+  "evolutionForm": "Evolution Form",
+  "pokemonAppearanceTransformationBySeries": "Pokemon Appearance Transformation by Series",
+  "noEvolutionData": "No evolution data available.",
+  "loadingEvolutionChain": "Loading evolution chain...",
+  "failedToLoadEvolutionChain": "Failed to load evolution chain.",
+  "searchPokemonPlaceholder": "Search Pokemon With Name or Id!"
+}
