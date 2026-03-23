@@ -28,8 +28,8 @@ const MainPage = () => {
   const [search, setSearch] = useState("");
   const t = useTranslations();
 
-  // 디바운스: 타이핑 300ms 후 자동 검색
-  const debouncedInput = useDebouncedValue(input, 300);
+  // 디바운스: 타이핑 500ms 후 자동 검색
+  const debouncedInput = useDebouncedValue(input, 500);
   useEffect(() => {
     const normalized = debouncedInput.trim().toLowerCase();
     setSearch(normalized);
