@@ -1,16 +1,20 @@
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery, useQueries } from "@tanstack/react-query";
 import {
   fetchPokemon,
   fetchPokemonByType,
   fetchPokemonList,
   fetchPokemonSpecies,
   fetchByUrl,
+  fetchAllPokemonNames,
 } from "@/features/pokemon/api";
 import {
   PokemonDetailType,
   PokemonSpecies,
   EvolutionChain,
+  PokemonAll,
 } from "@/types";
+import { POKEMON_NAMES_KO } from "@/shared/constants/pokemonNames";
+import { useLanguageValue } from "@/shared/hooks/useLanguage";
 
 export const usePokemon = (nameOrId?: string) =>
   useQuery<PokemonDetailType>({
@@ -59,3 +63,40 @@ export const useEvolutionChain = (evolutionChainUrl?: string) =>
     queryFn: () => fetchByUrl<EvolutionChain>(evolutionChainUrl as string),
     enabled: !!evolutionChainUrl,
   });
+
+export const useAllPokemonNames = () =>
+  useQuery<PokemonAll>({
+    queryKey: ["allPokemonNames"],
+    queryFn: fetchAllPokemonNames,
+    staleTime: Infinity,
+  });
+
+type SearchIndexEntry = { id: number; name: string };
+
+export const usePokemonSearchIndex = (): SearchIndexEntry[] => {
+  const lang = useLanguageValue();
+  const { data } = useAllPokemonNames();
+
+  if (!data?.results) return [];
+
+  return data.results.map((pokemon) => {
+    const id = Number(pokemon.url.split("/").filter(Boolean).pop());
+    const name = lang === "ko" ? (POKEMON_NAMES_KO[id] ?? pokemon.name) : pokemon.name;
+    return { id, name: name.toLowerCase() };
+  });
+};
+
+export const usePokemonSearchResults = (matchedIds: number[]) => {
+  const results = useQueries({
+    queries: matchedIds.map((id) => ({
+      queryKey: ["pokemon", String(id)],
+      queryFn: () => fetchPokemon(String(id)),
+      staleTime: 1000 * 60 * 30,
+    })),
+  });
+
+  return results
+    .filter((r) => r.status === "success" && r.data)
+    .map((r) => r.data as PokemonDetailType)
+    .sort((a, b) => a.id - b.id);
+};

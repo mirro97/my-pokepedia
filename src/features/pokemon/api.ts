@@ -45,3 +45,10 @@ export const fetchPokemonSpecies = async (
   const response = await axios.get<PokemonSpecies>(`/pokemon-species/${id}`);
   return response.data;
 };
+
+export const fetchAllPokemonNames = async (): Promise<PokemonAll> => {
+  const response = await axios.get<PokemonAll>(`/pokemon`, {
+    params: { limit: 1025, offset: 0 },
+  });
+  return response.data;
+};
