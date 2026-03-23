@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import type { Locale } from '@/lib/i18n/config';
 import MainPageClient from './main-client';
 
+export const runtime = 'edge';
+
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://my-pokepedia.pages.dev';
 
 export async function generateMetadata({

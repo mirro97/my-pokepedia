@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import { fetchPokemon, fetchPokemonSpecies } from '@/lib/api';
 import PokemonDetailBox from '@/components/pokemon/PokemonDetailBox';
 
+export const runtime = 'edge';
+
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://my-pokepedia.pages.dev';
 
 export async function generateMetadata({

@@ -3,6 +3,8 @@ import { POKEMON_TYPE_LIST, POKEMON_TYPE_LABELS_KO } from '@/constants/pokemon';
 import type { Locale } from '@/lib/i18n/config';
 import PokemonTypeClient from './type-client';
 
+export const runtime = 'edge';
+
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://my-pokepedia.pages.dev';
 
 export async function generateMetadata({
