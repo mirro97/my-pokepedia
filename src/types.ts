@@ -7,12 +7,12 @@ export interface PokemonAll {
   count: number;
   next: string;
   previous: string | null;
-  results: PokemonBasic;
+  results: PokemonBasic[];
 }
 
 export interface PokemonAblities {
   ability: PokemonBasic;
-  is_hidden: false;
+  is_hidden: boolean;
   slot: number;
 }
 
@@ -94,10 +94,10 @@ export interface PokemonVersionsGeneration {
 }
 
 export interface PokemonDetailType {
-  abilities: PokemonAblities;
+  abilities: PokemonAblities[];
   base_experience: number;
-  forms: PokemonBasic;
-  game_indices: PokemonGameIndices;
+  forms: PokemonBasic[];
+  game_indices: PokemonGameIndices[];
   height: number;
   held_items: {
     items: PokemonBasic;
@@ -127,7 +127,7 @@ export interface PokemonDetailType {
     base_stat: number;
     effort: number;
     stat: PokemonBasic;
-  };
+  }[];
   types: PokemonType[];
   weight: number;
 }
@@ -147,7 +147,7 @@ export interface PokemonSpecies {
   forms_switchable: boolean;
   growth_rate: PokemonBasic;
   pokedex_numbers: [];
-  egg_groups: PokemonBasic;
+  egg_groups: PokemonBasic[];
   color: PokemonBasic;
   shape: PokemonBasic;
   evolves_from_species: PokemonBasic;

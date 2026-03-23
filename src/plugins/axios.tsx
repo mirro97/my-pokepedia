@@ -2,12 +2,12 @@ import axios from "axios";
 
 // const BASE_URL
 
-const instanse = axios.create({
+const instance = axios.create({
   baseURL: "https://pokeapi.co/api/v2/",
 });
 
 // 요청 인터셉터
-instanse.interceptors.request.use(
+instance.interceptors.request.use(
   (config) => {
     return config;
   },
@@ -17,7 +17,7 @@ instanse.interceptors.request.use(
 );
 
 // 응답 인터셉터
-axios.interceptors.response.use(
+instance.interceptors.response.use(
   (response) => {
     return response;
   },
@@ -26,4 +26,4 @@ axios.interceptors.response.use(
   }
 );
 
-export default instanse;
+export default instance;

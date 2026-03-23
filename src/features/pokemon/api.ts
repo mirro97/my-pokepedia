@@ -1,12 +1,17 @@
 import axios from "@/plugins/axios";
+import { PokemonDetailType, PokemonAll, PokemonSpecies } from "@/types";
 
-export const fetchByUrl = async (url: string) => {
-  const response = await axios.get(url);
+export const fetchByUrl = async <T = unknown>(url: string): Promise<T> => {
+  const response = await axios.get<T>(url);
   return response.data;
 };
 
-export const fetchPokemon = async (nameOrId: string) => {
-  const response = await axios.get(`/pokemon/${nameOrId}`);
+export const fetchPokemon = async (
+  nameOrId: string
+): Promise<PokemonDetailType> => {
+  const response = await axios.get<PokemonDetailType>(
+    `/pokemon/${nameOrId}`
+  );
   return response.data;
 };
 
@@ -19,11 +24,11 @@ export const fetchPokemonList = async ({
   search?: string;
 }) => {
   if (search) {
-    const response = await axios.get(`/pokemon/${search}`);
+    const response = await axios.get<PokemonDetailType>(`/pokemon/${search}`);
     return response.data;
   }
 
-  const response = await axios.get(`/pokemon`, {
+  const response = await axios.get<PokemonAll>(`/pokemon`, {
     params: { limit: OFFSET, offset: pageParam },
   });
   return response.data;
@@ -34,7 +39,9 @@ export const fetchPokemonByType = async (typeId: string) => {
   return response.data;
 };
 
-export const fetchPokemonSpecies = async (id: string) => {
-  const response = await axios.get(`/pokemon-species/${id}`);
+export const fetchPokemonSpecies = async (
+  id: string
+): Promise<PokemonSpecies> => {
+  const response = await axios.get<PokemonSpecies>(`/pokemon-species/${id}`);
   return response.data;
 };

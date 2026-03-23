@@ -13,7 +13,7 @@ import { useTranslations } from "@/shared/hooks/useTranslations"; // Add useTran
 
 interface propsType {
   pokemonInfo: PokemonDetailType;
-  pokemonSpeciesInfo: PokemonSpecies;
+  pokemonSpeciesInfo?: PokemonSpecies;
 }
 
 interface flavorTextType {
