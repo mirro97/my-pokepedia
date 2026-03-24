@@ -8,12 +8,15 @@
     "start": "next start",
     "preview": "npx @cloudflare/next-on-pages && npx wrangler pages dev .vercel/output/static",
     "deploy": "npx @cloudflare/next-on-pages",
-    "generate-names": "tsx scripts/generate-pokemon-names.ts"
+    "generate-names": "tsx scripts/generate-pokemon-names.ts",
+    "format": "biome format --write ./src",
+    "lint": "biome lint ./src",
+    "check": "biome check --write ./src",
+    "check:ci": "biome check ./src"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.90.0",
     "@tanstack/react-query-devtools": "^5.90.0",
-    "axios": "^1.13.5",
     "next": "^15.0.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -21,6 +24,7 @@
     "react-lazy-load-image-component": "^1.6.3"
   },
   "devDependencies": {
+    "@biomejs/biome": "2.4.8",
     "@cloudflare/next-on-pages": "^1.13.8",
     "@types/node": "^20.0.0",
     "@types/react": "^18.3.0",

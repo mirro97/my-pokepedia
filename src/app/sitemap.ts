@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next';
 import { POKEMON_TYPE_LIST } from '@/constants/pokemon';
+import { SITE_URL } from '@/constants/site';
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://my-pokepedia.pages.dev';
 const LOCALES = ['ko', 'en'];
 const TOTAL_POKEMON = 1025;
 
