@@ -1,12 +1,12 @@
 import type { Metadata } from 'next';
 import Script from 'next/script';
-import { getDictionary } from '@/lib/i18n/dictionaries';
-import type { Locale } from '@/lib/i18n/config';
-import QueryProvider from '@/components/providers/QueryProvider';
-import { DictionaryProvider } from '@/components/providers/DictionaryProvider';
-import { Header } from '@/components/layout/Header';
-import { Footer } from '@/components/layout/Footer';
+import Footer from '@/components/layout/Footer';
+import Header from '@/components/layout/Header';
 import SetHtmlLang from '@/components/layout/SetHtmlLang';
+import { DictionaryProvider } from '@/components/providers/DictionaryProvider';
+import QueryProvider from '@/components/providers/QueryProvider';
+import type { Locale } from '@/lib/i18n/config';
+import { getDictionary } from '@/lib/i18n/dictionaries';
 
 export const metadata: Metadata = {
   title: '나만의 포켓몬 도감',
@@ -23,8 +23,8 @@ export default async function LangLayout({
   children: React.ReactNode;
   params: Promise<{ lang: string }>;
 }) {
-  const { lang } = await params;
-  const dictionary = await getDictionary(lang as Locale);
+  const { lang: language } = await params;
+  const dictionary = await getDictionary(language as Locale);
 
   return (
     <>
@@ -37,19 +37,20 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       </Script>
       <noscript>
         <iframe
+          title="Google Tag Manager"
           src="https://www.googletagmanager.com/ns.html?id=GTM-KSP7LZS9"
           height="0"
           width="0"
           style={{ display: 'none', visibility: 'hidden' }}
         />
       </noscript>
-      <SetHtmlLang lang={lang} />
+      <SetHtmlLang language={language} />
       <QueryProvider>
         <DictionaryProvider dictionary={dictionary}>
           <div className="flex flex-col h-full">
             <Header />
             {children}
-            <Footer lang={lang} />
+            <Footer language={language} />
           </div>
         </DictionaryProvider>
       </QueryProvider>

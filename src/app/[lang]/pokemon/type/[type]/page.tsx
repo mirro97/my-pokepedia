@@ -1,19 +1,17 @@
 import type { Metadata } from 'next';
-import { POKEMON_TYPE_LIST, POKEMON_TYPE_LABELS_KO } from '@/constants/pokemon';
-import type { Locale } from '@/lib/i18n/config';
-import PokemonTypeClient from './type-client';
+import PokemonTypeExplorer from '@/components/pokemon/PokemonTypeExplorer';
+import { POKEMON_TYPE_LABELS_KO } from '@/constants/pokemon';
+import { SITE_URL } from '@/constants/site';
 
 export const runtime = 'edge';
-
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://my-pokepedia.pages.dev';
 
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ lang: string; type: string }>;
 }): Promise<Metadata> {
-  const { lang, type } = await params;
-  const isKo = lang === 'ko';
+  const { lang: language, type } = await params;
+  const isKo = language === 'ko';
   const typeName = isKo ? (POKEMON_TYPE_LABELS_KO[type] ?? type) : type;
 
   const title = isKo
@@ -28,7 +26,7 @@ export async function generateMetadata({
     title,
     description,
     alternates: {
-      canonical: `${SITE_URL}/${lang}/pokemon/type/${type}`,
+      canonical: `${SITE_URL}/${language}/pokemon/type/${type}`,
       languages: {
         ko: `${SITE_URL}/ko/pokemon/type/${type}`,
         en: `${SITE_URL}/en/pokemon/type/${type}`,
@@ -48,6 +46,6 @@ export default async function PokemonTypePage({
 }: {
   params: Promise<{ lang: string; type: string }>;
 }) {
-  const { lang, type } = await params;
-  return <PokemonTypeClient lang={lang as Locale} type={type} />;
+  const { type } = await params;
+  return <PokemonTypeExplorer type={type} />;
 }

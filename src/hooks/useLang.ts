@@ -1,6 +1,6 @@
 'use client';
 import { useParams } from 'next/navigation';
-import type { Locale } from './i18n/config';
+import type { Locale } from '@/lib/i18n/config';
 
 export const useLang = (): Locale => {
   const params = useParams();

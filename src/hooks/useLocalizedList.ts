@@ -1,6 +1,6 @@
 'use client';
 import { useMemo } from 'react';
-import { useLang } from './use-lang';
+import { useLang } from '@/hooks/useLang';
 
 interface LanguageEntry {
   language?: {
@@ -9,9 +9,9 @@ interface LanguageEntry {
 }
 
 export const useLocalizedList = <T extends LanguageEntry>(items?: T[]) => {
-  const lang = useLang();
+  const language = useLang();
   return useMemo(() => {
     if (!items?.length) return [] as T[];
-    return items.filter((item) => item?.language?.name === lang);
-  }, [items, lang]);
+    return items.filter((item) => item?.language?.name === language);
+  }, [items, language]);
 };

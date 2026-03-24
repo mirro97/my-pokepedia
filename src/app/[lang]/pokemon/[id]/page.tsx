@@ -1,46 +1,39 @@
 import type { Metadata } from 'next';
-import { fetchPokemon, fetchPokemonSpecies } from '@/lib/api';
 import PokemonDetailBox from '@/components/pokemon/PokemonDetailBox';
+import { SITE_URL } from '@/constants/site';
+import { ONE_DAY } from '@/constants/time';
+import { fetchPokemon, fetchPokemonSpecies } from '@/lib/api';
+import type { PokemonDetailType, PokemonSpecies } from '@/lib/types';
+import { getLocalizedPokemonInfo } from '@/lib/utils';
 
 export const runtime = 'edge';
-
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://my-pokepedia.pages.dev';
 
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ lang: string; id: string }>;
 }): Promise<Metadata> {
-  const { lang, id } = await params;
+  const { lang: language, id } = await params;
 
   try {
+    const revalidateOptions = { next: { revalidate: ONE_DAY } } as RequestInit;
     const [pokemon, species] = await Promise.all([
-      fetchPokemon(id),
-      fetchPokemonSpecies(id),
+      fetchPokemon(id, revalidateOptions),
+      fetchPokemonSpecies(id, revalidateOptions),
     ]);
 
-    const nameEntry = (species.names as any[])?.find(
-      (n: any) => n.language.name === lang
-    );
-    const name = nameEntry?.name || pokemon.name;
+    const { name, description, image } = getLocalizedPokemonInfo(pokemon, species, language);
 
-    const flavorEntry = (species.flavor_text_entries as any[])?.find(
-      (f: any) => f.language.name === lang
-    );
-    const description = flavorEntry?.flavor_text?.replace(/\n/g, ' ') || '';
-
-    const title = lang === 'ko'
-      ? `${name} - 포켓몬 도감 #${pokemon.id}`
-      : `${name} - Pokemon Pokedex #${pokemon.id}`;
-
-    const image = pokemon.sprites?.other?.['official-artwork']?.front_default
-      || pokemon.sprites?.front_default;
+    const title =
+      language === 'ko'
+        ? `${name} - 포켓몬 도감 #${pokemon.id}`
+        : `${name} - Pokemon Pokedex #${pokemon.id}`;
 
     return {
       title,
       description,
       alternates: {
-        canonical: `${SITE_URL}/${lang}/pokemon/${id}`,
+        canonical: `${SITE_URL}/${language}/pokemon/${id}`,
         languages: {
           ko: `${SITE_URL}/ko/pokemon/${id}`,
           en: `${SITE_URL}/en/pokemon/${id}`,
@@ -51,7 +44,7 @@ export async function generateMetadata({
         description,
         images: image ? [{ url: image, width: 475, height: 475 }] : [],
         type: 'article',
-        locale: lang === 'ko' ? 'ko_KR' : 'en_US',
+        locale: language === 'ko' ? 'ko_KR' : 'en_US',
       },
       twitter: {
         card: 'summary',
@@ -68,21 +61,13 @@ export async function generateMetadata({
 function PokemonJsonLd({
   pokemon,
   species,
-  lang,
+  language,
 }: {
-  pokemon: any;
-  species: any;
-  lang: string;
+  pokemon: PokemonDetailType;
+  species: PokemonSpecies;
+  language: string;
 }) {
-  const nameEntry = (species.names as any[])?.find(
-    (n: any) => n.language.name === lang
-  );
-  const name = nameEntry?.name || pokemon.name;
-  const flavorEntry = (species.flavor_text_entries as any[])?.find(
-    (f: any) => f.language.name === lang
-  );
-  const description = flavorEntry?.flavor_text?.replace(/\n/g, ' ') || '';
-  const image = pokemon.sprites?.other?.['official-artwork']?.front_default;
+  const { name, description, image } = getLocalizedPokemonInfo(pokemon, species, language);
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -92,7 +77,7 @@ function PokemonJsonLd({
     image,
     mainEntityOfPage: {
       '@type': 'WebPage',
-      '@id': `${SITE_URL}/${lang}/pokemon/${pokemon.id}`,
+      '@id': `${SITE_URL}/${language}/pokemon/${pokemon.id}`,
     },
   };
 
@@ -109,17 +94,18 @@ export default async function PokemonDetailPage({
 }: {
   params: Promise<{ lang: string; id: string }>;
 }) {
-  const { lang, id } = await params;
+  const { lang: language, id } = await params;
 
   try {
+    const revalidateOptions = { next: { revalidate: ONE_DAY } } as RequestInit;
     const [pokemon, species] = await Promise.all([
-      fetchPokemon(id),
-      fetchPokemonSpecies(id),
+      fetchPokemon(id, revalidateOptions),
+      fetchPokemonSpecies(id, revalidateOptions),
     ]);
 
     return (
       <div className="max-w-screen-lg mx-auto py-24 px-5">
-        <PokemonJsonLd pokemon={pokemon} species={species} lang={lang} />
+        <PokemonJsonLd pokemon={pokemon} species={species} language={language} />
         <PokemonDetailBox pokemonInfo={pokemon} pokemonSpeciesInfo={species} />
       </div>
     );

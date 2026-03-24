@@ -1,18 +1,16 @@
 import type { Metadata } from 'next';
-import type { Locale } from '@/lib/i18n/config';
-import MainPageClient from './main-client';
+import PokemonExplorer from '@/components/pokemon/PokemonExplorer';
+import { SITE_URL } from '@/constants/site';
 
 export const runtime = 'edge';
-
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://my-pokepedia.pages.dev';
 
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ lang: string }>;
 }): Promise<Metadata> {
-  const { lang } = await params;
-  const isKo = lang === 'ko';
+  const { lang: language } = await params;
+  const isKo = language === 'ko';
 
   return {
     title: isKo ? '나만의 포켓몬 도감' : 'My Pokemon Pokedex',
@@ -20,7 +18,7 @@ export async function generateMetadata({
       ? '1025종 포켓몬의 정보, 타입, 진화, 스프라이트를 확인하세요.'
       : 'Browse information, types, evolutions, and sprites of 1025 Pokemon.',
     alternates: {
-      canonical: `${SITE_URL}/${lang}`,
+      canonical: `${SITE_URL}/${language}`,
       languages: {
         ko: `${SITE_URL}/ko`,
         en: `${SITE_URL}/en`,
@@ -37,11 +35,6 @@ export async function generateMetadata({
   };
 }
 
-export default async function MainPage({
-  params,
-}: {
-  params: Promise<{ lang: string }>;
-}) {
-  const { lang } = await params;
-  return <MainPageClient lang={lang as Locale} />;
+export default function MainPage() {
+  return <PokemonExplorer />;
 }

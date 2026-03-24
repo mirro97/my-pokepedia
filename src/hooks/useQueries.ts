@@ -1,23 +1,18 @@
 'use client';
 
-import { useInfiniteQuery, useQuery, useQueries } from '@tanstack/react-query';
+import { type InfiniteData, useInfiniteQuery, useQueries, useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
+import { POKEMON_NAMES_KO } from '@/constants/pokemonNames';
+import { useLang } from '@/hooks/useLang';
 import {
+  fetchAllPokemonNames,
+  fetchByUrl,
   fetchPokemon,
   fetchPokemonByType,
   fetchPokemonList,
   fetchPokemonSpecies,
-  fetchByUrl,
-  fetchAllPokemonNames,
-} from '@/lib/api-client';
-import {
-  PokemonDetailType,
-  PokemonSpecies,
-  EvolutionChain,
-  PokemonAll,
-} from '@/lib/types';
-import { POKEMON_NAMES_KO } from '@/constants/pokemonNames';
-import { useLang } from '@/lib/use-lang';
+} from '@/lib/api';
+import type { EvolutionChain, PokemonAll, PokemonDetailType, PokemonSpecies } from '@/lib/types';
 import { extractIdFromUrl } from '@/lib/utils';
 
 export const usePokemon = (nameOrId?: string) =>
@@ -34,13 +29,6 @@ export const usePokemonSpecies = (nameOrId?: string) =>
     enabled: !!nameOrId,
   });
 
-export const usePokemonByUrl = <T = PokemonDetailType>(url?: string) =>
-  useQuery<T>({
-    queryKey: ['pokemon-url', url],
-    queryFn: () => fetchByUrl<T>(url as string),
-    enabled: !!url,
-  });
-
 export const usePokemonByType = (type?: string) =>
   useQuery({
     queryKey: ['typed-pokemonList', type],
@@ -48,17 +36,27 @@ export const usePokemonByType = (type?: string) =>
     enabled: !!type,
   });
 
-export const usePokemonList = (search: string) =>
-  useInfiniteQuery<any>({
+export const usePokemonList = (search: string) => {
+  type PokemonListResponse = PokemonAll | PokemonDetailType;
+
+  return useInfiniteQuery<
+    PokemonListResponse,
+    Error,
+    InfiniteData<PokemonListResponse>,
+    string[],
+    number
+  >({
     queryKey: ['pokemonList', search],
-    queryFn: ({ pageParam }) => fetchPokemonList({ pageParam: pageParam as number, search }),
+    queryFn: ({ pageParam }) => fetchPokemonList({ pageParam, search }),
     initialPageParam: 0,
-    getNextPageParam: (lastPage: { next?: string }) => {
-      const { next } = lastPage || {};
-      if (!next) return undefined;
-      return Number(new URL(next).searchParams.get('offset'));
+    getNextPageParam: (lastPage) => {
+      if ('next' in lastPage && lastPage.next) {
+        return Number(new URL(lastPage.next).searchParams.get('offset'));
+      }
+      return undefined;
     },
   });
+};
 
 export const useEvolutionChain = (evolutionChainUrl?: string) =>
   useQuery<EvolutionChain>({
@@ -77,7 +75,7 @@ export const useAllPokemonNames = () =>
 type SearchIndexEntry = { id: number; name: string };
 
 export const usePokemonSearchIndex = (): SearchIndexEntry[] => {
-  const lang = useLang();
+  const language = useLang();
   const { data } = useAllPokemonNames();
 
   return useMemo(() => {
@@ -85,10 +83,10 @@ export const usePokemonSearchIndex = (): SearchIndexEntry[] => {
 
     return data.results.map((pokemon) => {
       const id = Number(extractIdFromUrl(pokemon.url));
-      const name = lang === 'ko' ? (POKEMON_NAMES_KO[id] ?? pokemon.name) : pokemon.name;
+      const name = language === 'ko' ? (POKEMON_NAMES_KO[id] ?? pokemon.name) : pokemon.name;
       return { id, name: name.toLowerCase() };
     });
-  }, [data, lang]);
+  }, [data, language]);
 };
 
 export const usePokemonSearchResults = (matchedIds: number[]) => {
