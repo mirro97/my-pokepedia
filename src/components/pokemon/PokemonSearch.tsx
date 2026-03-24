@@ -1,7 +1,7 @@
 'use client';
 
-import SearchInput from '@/components/ui/SearchInput';
 import { useDictionary } from '@/components/providers/DictionaryProvider';
+import SearchInput from '@/components/ui/SearchInput';
 
 interface PokemonSearchProps {
   searchInput: string;
@@ -9,7 +9,11 @@ interface PokemonSearchProps {
   onImmediateSearch: () => void;
 }
 
-const PokemonSearch = ({ searchInput, setSearchInput, onImmediateSearch }: PokemonSearchProps) => {
+export default function PokemonSearch({
+  searchInput,
+  setSearchInput,
+  onImmediateSearch,
+}: PokemonSearchProps) {
   const translate = useDictionary();
 
   return (
@@ -22,6 +26,4 @@ const PokemonSearch = ({ searchInput, setSearchInput, onImmediateSearch }: Pokem
       />
     </div>
   );
-};
-
-export default PokemonSearch;
+}

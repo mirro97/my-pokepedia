@@ -1,36 +1,33 @@
 'use client';
 
-import { PokemonBasic, PokemonDetailType, PokemonSpecies, PokemonType } from '@/lib/types';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
+import { useDictionary } from '@/components/providers/DictionaryProvider';
 import Label from '@/components/ui/Label';
+import { POKEMON_IMAGE_KEYS } from '@/constants/pokemon';
+import { useLang } from '@/hooks/useLang';
+import { useLocalizedList } from '@/hooks/useLocalizedList';
+import { useEvolutionChain } from '@/hooks/useQueries';
+import type {
+  PokemonDetailType,
+  PokemonFlavorTextEntry,
+  PokemonName,
+  PokemonSpecies,
+  PokemonType,
+} from '@/lib/types';
+import { getAnimatedSpriteUrl } from '@/lib/utils';
+import EvolutionBranch from './EvolutionBranch';
 import PokemonGenerationGallery from './PokemonGenerationGallery';
 import PokemonTypeLabel from './PokemonTypeLabel';
-import ImageShadowWrap from '@/components/ui/ImageShadowWrap';
-import { useLang } from '@/lib/use-lang';
-import { useLocalizedList } from '@/lib/use-localized-list';
-import { POKEMON_IMAGE_KEYS } from '@/constants/pokemon';
-import { useEvolutionChain } from '@/lib/hooks';
-import EvolutionChainDisplay from './EvolutionChainDisplay';
-import { useDictionary } from '@/components/providers/DictionaryProvider';
-import { getAnimatedSpriteUrl } from '@/lib/utils';
 
 interface PokemonDetailBoxProps {
   pokemonInfo: PokemonDetailType;
   pokemonSpeciesInfo?: PokemonSpecies;
 }
 
-interface LocalizedFlavorText {
-  flavor_text: string | undefined;
-  language: PokemonBasic;
-  version: PokemonBasic;
-}
-
-interface LocalizedName {
-  language: PokemonBasic;
-  name: string;
-}
-
-const PokemonDetailBox = ({ pokemonInfo, pokemonSpeciesInfo }: PokemonDetailBoxProps) => {
+export default function PokemonDetailBox({
+  pokemonInfo,
+  pokemonSpeciesInfo,
+}: PokemonDetailBoxProps) {
   const language = useLang();
   const translate = useDictionary();
   const spriteUrl = getAnimatedSpriteUrl(pokemonInfo);
@@ -41,9 +38,13 @@ const PokemonDetailBox = ({ pokemonInfo, pokemonSpeciesInfo }: PokemonDetailBoxP
     isError: isEvolutionError,
   } = useEvolutionChain(pokemonSpeciesInfo?.evolution_chain?.url);
 
-  const localizedFlavorTexts: LocalizedFlavorText[] = useLocalizedList(pokemonSpeciesInfo?.flavor_text_entries);
-  const localizedNames: LocalizedName[] = useLocalizedList(pokemonSpeciesInfo?.names);
-  const genus = pokemonSpeciesInfo?.genera.find(genera => genera.language.name === language)?.genus;
+  const localizedFlavorTexts: PokemonFlavorTextEntry[] = useLocalizedList(
+    pokemonSpeciesInfo?.flavor_text_entries,
+  );
+  const localizedNames: PokemonName[] = useLocalizedList(pokemonSpeciesInfo?.names);
+  const genus = pokemonSpeciesInfo?.genera.find(
+    (genera) => genera.language.name === language,
+  )?.genus;
 
   return (
     <div className="flex flex-col p-10 items-center bg-[#fff] rounded-2xl shadow-xl">
@@ -55,8 +56,8 @@ const PokemonDetailBox = ({ pokemonInfo, pokemonSpeciesInfo }: PokemonDetailBoxP
       <span className="font-bold text-gray-100"># {pokemonInfo?.id}</span>
       <span className="text-2xl font-bold">{localizedNames[0]?.name}</span>
       <div className="flex w-full justify-center group is-tab mt-3">
-        {pokemonInfo?.types.map((type: PokemonType, index: number) => (
-          <PokemonTypeLabel key={index} typeData={type} />
+        {pokemonInfo?.types.map((type: PokemonType) => (
+          <PokemonTypeLabel key={type.type.name} typeData={type} />
         ))}
       </div>
       <div className="mt-3 text-lg font-bold text-gray-100">{genus}</div>
@@ -75,19 +76,26 @@ const PokemonDetailBox = ({ pokemonInfo, pokemonSpeciesInfo }: PokemonDetailBoxP
       </div>
       <div className="mt-10 max-w-3xl w-full flex flex-wrap justify-around">
         {POKEMON_IMAGE_KEYS.map(
-          (imageKey, index) =>
+          (imageKey) =>
             pokemonInfo?.sprites[imageKey] && (
-              <ImageShadowWrap key={index}>
+              <div
+                key={imageKey}
+                className="shadow-sm hover:shadow-md hover:animate-pulse rounded-md mb-7"
+              >
                 <LazyLoadImage src={pokemonInfo?.sprites[imageKey]} alt={imageKey} />
-              </ImageShadowWrap>
+              </div>
             ),
         )}
       </div>
       <div className="mt-10">
         <Label text={translate('evolutionForm')} />
-        {isEvolutionLoading && <p>Loading evolution chain...</p>}
-        {isEvolutionError && <p>Failed to load evolution chain.</p>}
-        {evolutionChainData && <EvolutionChainDisplay evolutionChain={evolutionChainData} />}
+        {isEvolutionLoading && <p>{translate('loadingEvolutionChain')}</p>}
+        {isEvolutionError && <p>{translate('failedToLoadEvolutionChain')}</p>}
+        {evolutionChainData?.chain && (
+          <div className="flex justify-center p-4">
+            <EvolutionBranch evolutionLink={evolutionChainData.chain} />
+          </div>
+        )}
       </div>
       <div className="mt-10">
         <Label text={translate('pokemonAppearanceTransformationBySeries')} />
@@ -95,6 +103,4 @@ const PokemonDetailBox = ({ pokemonInfo, pokemonSpeciesInfo }: PokemonDetailBoxP
       </div>
     </div>
   );
-};
-
-export default PokemonDetailBox;
+}

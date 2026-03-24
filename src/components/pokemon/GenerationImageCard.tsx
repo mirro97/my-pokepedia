@@ -1,16 +1,16 @@
 'use client';
 
-import { LazyLoadImage } from "react-lazy-load-image-component";
-import { useLang } from "@/lib/use-lang";
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import { useLang } from '@/hooks/useLang';
 
-interface Props {
+interface GenerationImageCardProps {
   enTitle: string;
   koTitle: string;
   src?: string;
 }
 
-const GenerationImageCard = ({ enTitle, koTitle, src }: Props) => {
-  const lang = useLang();
+export default function GenerationImageCard({ enTitle, koTitle, src }: GenerationImageCardProps) {
+  const language = useLang();
 
   if (!src) return null;
 
@@ -20,10 +20,8 @@ const GenerationImageCard = ({ enTitle, koTitle, src }: Props) => {
         <LazyLoadImage src={src} alt={enTitle} />
       </div>
       <span className="text-xs text-center font-galmuri">
-        {lang === "en" ? enTitle : koTitle}
+        {language === 'en' ? enTitle : koTitle}
       </span>
     </div>
   );
-};
-
-export default GenerationImageCard;
+}

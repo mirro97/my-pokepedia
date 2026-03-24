@@ -2,10 +2,10 @@
 
 import { useEffect } from 'react';
 
-export default function SetHtmlLang({ lang }: { lang: string }) {
+export default function SetHtmlLang({ language }: { language: string }) {
   useEffect(() => {
-    document.documentElement.lang = lang;
-  }, [lang]);
+    document.documentElement.lang = language;
+  }, [language]);
 
   return null;
 }

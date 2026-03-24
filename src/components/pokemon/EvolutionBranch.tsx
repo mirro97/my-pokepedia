@@ -1,18 +1,18 @@
 'use client';
 
-import { EvolutionChainLink, EvolutionChain, PokemonName } from '@/lib/types';
-import { LazyLoadImage } from 'react-lazy-load-image-component';
 import Link from 'next/link';
-import { usePokemon, usePokemonSpecies } from '@/lib/hooks';
-import { useLocalizedList } from '@/lib/use-localized-list';
-import { useLang } from '@/lib/use-lang';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import { useLang } from '@/hooks/useLang';
+import { useLocalizedList } from '@/hooks/useLocalizedList';
+import { usePokemon, usePokemonSpecies } from '@/hooks/useQueries';
+import type { EvolutionChainLink, PokemonName } from '@/lib/types';
 import { extractIdFromUrl } from '@/lib/utils';
 
 interface EvolutionBranchProps {
   evolutionLink: EvolutionChainLink;
 }
 
-const EvolutionBranch = ({ evolutionLink }: EvolutionBranchProps) => {
+export default function EvolutionBranch({ evolutionLink }: EvolutionBranchProps) {
   const language = useLang();
   const { species, evolves_to: evolvesTo, evolution_details: evolutionDetails } = evolutionLink;
   const { data: pokemonData } = usePokemon(species.name);
@@ -47,27 +47,11 @@ const EvolutionBranch = ({ evolutionLink }: EvolutionBranchProps) => {
       )}
       {evolvesTo.length > 0 && (
         <div className="flex mt-4 space-x-4">
-          {evolvesTo.map((nextEvolution, index) => (
-            <EvolutionBranch key={index} evolutionLink={nextEvolution} />
+          {evolvesTo.map((nextEvolution) => (
+            <EvolutionBranch key={nextEvolution.species.name} evolutionLink={nextEvolution} />
           ))}
         </div>
       )}
     </div>
   );
-};
-
-interface EvolutionChainDisplayProps {
-  evolutionChain: EvolutionChain;
 }
-
-const EvolutionChainDisplay = ({ evolutionChain }: EvolutionChainDisplayProps) => {
-  if (!evolutionChain?.chain) return <p>No evolution data available.</p>;
-
-  return (
-    <div className="flex justify-center p-4">
-      <EvolutionBranch evolutionLink={evolutionChain.chain} />
-    </div>
-  );
-};
-
-export default EvolutionChainDisplay;

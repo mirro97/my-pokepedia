@@ -1,29 +1,24 @@
 'use client';
 
-import { PokemonBasic, PokemonType } from '@/lib/types';
-import { LazyLoadImage } from 'react-lazy-load-image-component';
 import Link from 'next/link';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
 import PokemonTypeLabel from '@/components/pokemon/PokemonTypeLabel';
-import { useLocalizedList } from '@/lib/use-localized-list';
-import { usePokemon, usePokemonSpecies } from '@/lib/hooks';
-import { useLang } from '@/lib/use-lang';
+import { useLang } from '@/hooks/useLang';
+import { useLocalizedList } from '@/hooks/useLocalizedList';
+import { usePokemon, usePokemonSpecies } from '@/hooks/useQueries';
+import type { PokemonName, PokemonType } from '@/lib/types';
 import { getAnimatedSpriteUrl, hasAnimatedSprite } from '@/lib/utils';
 
 interface PokemonCardProps {
   pokemonIndex: string;
 }
 
-interface LocalizedName {
-  language: PokemonBasic;
-  name: string;
-}
-
-export const PokemonCard = ({ pokemonIndex }: PokemonCardProps) => {
+export default function PokemonCard({ pokemonIndex }: PokemonCardProps) {
   const language = useLang();
   const { data: pokemonInfo } = usePokemon(pokemonIndex);
   const { data: speciesInfo } = usePokemonSpecies(pokemonInfo?.species?.name);
   const pokemonId = pokemonInfo?.id ?? pokemonIndex;
-  const localizedNames: LocalizedName[] = useLocalizedList(speciesInfo?.names);
+  const localizedNames: PokemonName[] = useLocalizedList(speciesInfo?.names);
   const spriteUrl = getAnimatedSpriteUrl(pokemonInfo);
 
   return (
@@ -50,10 +45,10 @@ export const PokemonCard = ({ pokemonIndex }: PokemonCardProps) => {
         />
       </div>
       <div className="flex group is-card">
-        {pokemonInfo?.types?.map((type: PokemonType, index: number) => (
-          <PokemonTypeLabel key={index} typeData={type} />
+        {pokemonInfo?.types?.map((type: PokemonType) => (
+          <PokemonTypeLabel key={type.type.name} typeData={type} />
         ))}
       </div>
     </Link>
   );
-};
+}

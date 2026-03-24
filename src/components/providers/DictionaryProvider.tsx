@@ -11,11 +11,7 @@ export function DictionaryProvider({
   dictionary: Dictionary;
   children: React.ReactNode;
 }) {
-  return (
-    <DictionaryContext.Provider value={dictionary}>
-      {children}
-    </DictionaryContext.Provider>
-  );
+  return <DictionaryContext.Provider value={dictionary}>{children}</DictionaryContext.Provider>;
 }
 
 export const useDictionary = (): ((key: keyof Dictionary) => string) => {

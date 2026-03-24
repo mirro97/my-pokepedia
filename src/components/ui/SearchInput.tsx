@@ -5,7 +5,7 @@ interface SearchInputProps {
   onSearch: () => void;
 }
 
-const SearchInput = ({ value, placeholder, onChange, onSearch }: SearchInputProps) => {
+export default function SearchInput({ value, placeholder, onChange, onSearch }: SearchInputProps) {
   return (
     <div className="relative">
       <input
@@ -19,6 +19,7 @@ const SearchInput = ({ value, placeholder, onChange, onSearch }: SearchInputProp
         }}
       />
       <button
+        type="button"
         className="absolute right-[15px] top-3 hover:cursor-pointer"
         onClick={onSearch}
       >
@@ -26,6 +27,4 @@ const SearchInput = ({ value, placeholder, onChange, onSearch }: SearchInputProp
       </button>
     </div>
   );
-};
-
-export default SearchInput;
+}

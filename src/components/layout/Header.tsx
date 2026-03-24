@@ -2,18 +2,18 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { useLang } from '@/lib/use-lang';
 import { useDictionary } from '@/components/providers/DictionaryProvider';
+import { useLang } from '@/hooks/useLang';
 import { useScrollPosition } from '@/hooks/useScrollPosition';
 
-export const Header = () => {
+export default function Header() {
   const language = useLang();
   const router = useRouter();
   const pathname = usePathname();
   const scrollPosition = useScrollPosition();
   const translate = useDictionary();
 
-  const switchLanguage = (newLanguage: string) => {
+  const handleLanguageChange = (newLanguage: string) => {
     const newPath = pathname.replace(/^\/(ko|en)/, `/${newLanguage}`);
     router.push(newPath);
   };
@@ -31,18 +31,16 @@ export const Header = () => {
         <div className="text-xs sm:text-sm items-center hidden sm:flex">
           <img className="w-4 sm:w-5" src="/images/global.png" alt="다국어" />
           <button
-            onClick={() => switchLanguage('en')}
-            className={`${
-              language === 'en' ? 'text-[#5A7C88]' : 'text-gray-100'
-            } p-1 sm:p-2`}
+            type="button"
+            onClick={() => handleLanguageChange('en')}
+            className={`${language === 'en' ? 'text-[#5A7C88]' : 'text-gray-100'} p-1 sm:p-2`}
           >
             {translate('english')}
           </button>
           <button
-            onClick={() => switchLanguage('ko')}
-            className={`${
-              language === 'ko' ? 'text-[#5A7C88]' : 'text-gray-100'
-            } p-1 sm:p-2`}
+            type="button"
+            onClick={() => handleLanguageChange('ko')}
+            className={`${language === 'ko' ? 'text-[#5A7C88]' : 'text-gray-100'} p-1 sm:p-2`}
           >
             {translate('korean')}
           </button>
@@ -50,8 +48,9 @@ export const Header = () => {
         <div className="text-xs flex items-center sm:hidden">
           <img className="w-4 sm:w-5" src="/images/global.png" alt="다국어" />
           <button
+            type="button"
             className="p-1 text-[#5A7C88]"
-            onClick={() => switchLanguage(language === 'ko' ? 'en' : 'ko')}
+            onClick={() => handleLanguageChange(language === 'ko' ? 'en' : 'ko')}
           >
             {translate('english')}
             {translate('korean')}
@@ -60,4 +59,4 @@ export const Header = () => {
       </div>
     </header>
   );
-};
+}
