@@ -10,14 +10,10 @@ export interface PokemonAll {
   results: PokemonBasic[];
 }
 
-export interface PokemonAblities {
+export interface PokemonAbilities {
   ability: PokemonBasic;
   is_hidden: boolean;
   slot: number;
-}
-
-export interface PokemonLanguage {
-  language: PokemonBasic;
 }
 
 export interface PokemonGameIndices {
@@ -54,6 +50,19 @@ export interface PokemonGenera {
   };
 }
 
+export interface PokemonFlavorTextEntry {
+  flavor_text: string;
+  language: PokemonBasic;
+  version: PokemonBasic;
+}
+
+export interface PokemonTypeResponse {
+  id: number;
+  name: string;
+  names: { language: PokemonBasic; name: string }[];
+  pokemon: { pokemon: PokemonBasic; slot: number }[];
+}
+
 export interface PokemonImgType {
   [key: string]: string;
   back_default: string;
@@ -67,34 +76,34 @@ export interface PokemonImgType {
 }
 
 export interface PokemonVersionsGeneration {
-  "generation-i": { "red-blue": PokemonImgType; yellow: PokemonImgType };
-  "generation-ii": {
+  'generation-i': { 'red-blue': PokemonImgType; yellow: PokemonImgType };
+  'generation-ii': {
     crystal: PokemonImgType;
     gold: PokemonImgType;
     silver: PokemonImgType;
   };
-  "generation-iii": {
+  'generation-iii': {
     emerald: PokemonImgType;
-    "firered-leafgreen": PokemonImgType;
-    "ruby-sapphire": PokemonImgType;
+    'firered-leafgreen': PokemonImgType;
+    'ruby-sapphire': PokemonImgType;
   };
-  "generation-iv": {
-    "diamond-pearl": PokemonImgType;
-    "heartgold-soulsilver": PokemonImgType;
+  'generation-iv': {
+    'diamond-pearl': PokemonImgType;
+    'heartgold-soulsilver': PokemonImgType;
     platinum: PokemonImgType;
   };
-  "generation-v": {
-    "black-white": { animated: PokemonImgType; front_default: string };
+  'generation-v': {
+    'black-white': { animated: PokemonImgType; front_default: string };
   };
-  "generation-vi": {
-    "omegaruby-alphasapphire": PokemonImgType;
-    "x-y": PokemonImgType;
+  'generation-vi': {
+    'omegaruby-alphasapphire': PokemonImgType;
+    'x-y': PokemonImgType;
   };
-  "generation-vii": { "ultra-sun-ultra-moon": PokemonImgType };
+  'generation-vii': { 'ultra-sun-ultra-moon': PokemonImgType };
 }
 
 export interface PokemonDetailType {
-  abilities: PokemonAblities[];
+  abilities: PokemonAbilities[];
   base_experience: number;
   forms: PokemonBasic[];
   game_indices: PokemonGameIndices[];
@@ -111,16 +120,10 @@ export interface PokemonDetailType {
   order: number;
   past_types: [];
   species: PokemonBasic;
-  sprites: {
-    [key: string]: any;
-    back_default: string;
-    back_female: string;
-    back_shiny: string;
-    back_shiny_female: string;
-    front_default: string;
-    front_female: string;
-    front_shiny: string;
-    front_shiny_female: string;
+  sprites: PokemonImgType & {
+    other?: {
+      'official-artwork'?: { front_default?: string };
+    };
     versions: PokemonVersionsGeneration;
   };
   stats: {
@@ -156,8 +159,8 @@ export interface PokemonSpecies {
   };
   habitat: null;
   generation: PokemonBasic;
-  names: [];
-  flavor_text_entries: [];
+  names: PokemonName[];
+  flavor_text_entries: PokemonFlavorTextEntry[];
   form_descriptions: [];
   genera: PokemonGenera[];
   varieties: [];
