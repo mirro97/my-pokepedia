@@ -51,7 +51,7 @@ export default function PokemonTypeExplorer({ type }: PokemonTypeExplorerProps) 
 
   return (
     <div className="py-24 px-4 sm:px-12 flex-1">
-      <div className="p-5 w-full bg-[#fff] rounded-2xl shadow-md">
+      <div className="p-5 w-full bg-white rounded-2xl shadow-md">
         <div className="flex">
           <div className="w-8 mr-3">
             <img src={`/images/pokemon-type-images/${type}.svg`} alt={type} />

@@ -24,7 +24,7 @@ export default function PokemonCard({ pokemonIndex }: PokemonCardProps) {
   return (
     <Link
       href={`/${language}/pokemon/${pokemonId}`}
-      className="flex flex-col p-5 w-full bg-[#fff] rounded-2xl shadow-md"
+      className="flex flex-col p-5 w-full bg-white rounded-2xl shadow-md"
     >
       <div className="flex items-center text-base">
         <img

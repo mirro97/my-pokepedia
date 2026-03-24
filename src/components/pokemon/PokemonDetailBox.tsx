@@ -47,20 +47,20 @@ export default function PokemonDetailBox({
   )?.genus;
 
   return (
-    <div className="flex flex-col p-10 items-center bg-[#fff] rounded-2xl shadow-xl">
+    <div className="flex flex-col p-10 items-center bg-white rounded-2xl shadow-xl">
       <div className="p-9">
         <div className="max-w-[180px]">
           <LazyLoadImage src={spriteUrl} width={120} height={120} />
         </div>
       </div>
-      <span className="font-bold text-gray-100"># {pokemonInfo?.id}</span>
+      <span className="font-bold text-muted"># {pokemonInfo?.id}</span>
       <span className="text-2xl font-bold">{localizedNames[0]?.name}</span>
       <div className="flex w-full justify-center group is-tab mt-3">
         {pokemonInfo?.types.map((type: PokemonType) => (
           <PokemonTypeLabel key={type.type.name} typeData={type} />
         ))}
       </div>
-      <div className="mt-3 text-lg font-bold text-gray-100">{genus}</div>
+      <div className="mt-3 text-lg font-bold text-muted">{genus}</div>
       <div className="mt-3 text-center">
         <span>{localizedFlavorTexts[0]?.flavor_text}</span>
       </div>

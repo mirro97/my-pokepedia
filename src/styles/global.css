@@ -22,7 +22,7 @@
 @layer components {
   .type-label {
     border-radius: 23px;
-    color: #fff;
+    @apply text-white;
   }
 }
 
@@ -45,10 +45,9 @@ body {
   font-family: "Pretendard", sans-serif;
   letter-spacing: -0.4px;
   font-size: 15px;
-  color: #3a3939;
+  @apply text-foreground bg-page-bg;
   overflow-y: scroll;
   height: 100%;
-  background-color: #f2f4f6;
 }
 
 p {
