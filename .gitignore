@@ -25,5 +25,5 @@ next-env.d.ts
 *.sln
 *.sw?
 
-.CLAUDE.md
+CLAUDE.md
 .claude
